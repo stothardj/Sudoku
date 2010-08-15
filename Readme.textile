@@ -1,0 +1,8 @@
+h1. Sudoku Solver
+
+_Created by Jake Stothard stothardj@gmail.com_
+
+Find all possibilities to any size sudoku puzzle. It relies on
+some guile specific functions, but if you need to run this in
+a different Scheme environment they should not be too diffiucult
+to define.
