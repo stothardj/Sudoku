@@ -443,20 +443,6 @@
 				(backtrack)
 				(let ((simplified
 				       (reduce-rows (reduce-cols (reduce-blocks bboard box-width box-height)))))
-
-
-				  ;;(newline)
-				  ;;(display "BBoard")
-				  ;;(newline)
-				  ;;(draw-board bboard)
-				  ;;(newline)
-				  ;;(display "Simplified")
-				  ;;(newline)
-				  ;;(draw-board simplified)
-				  ;;(newline)
-
-
-				  
 				  (if (equal? bboard simplified)
 				      (if (sudoku-solved bboard)
 					  bboard
