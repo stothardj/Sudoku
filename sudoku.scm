@@ -424,7 +424,6 @@
   )
 
 ;; Checks to see if any failure conditions are met
-;; TODO
 (define (sudoku-failed board box-width box-height)
   (or (sudoku-nopossibilities board)
       (sudoku-duplicates-in-row board)
