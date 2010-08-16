@@ -126,11 +126,6 @@
       )
   )
 
-;; Backtrack until it returns false (meaning no more possibilties)
-(define (repeat-backtrack)
-  (and (backtrack) (repeat-backtrack))
-  )
-
 ;; replace list with one possibility with terminal
 (define (finalize item)
   (if (and (list? item) (not (null? item)) (null? (cdr item)))
@@ -563,25 +558,29 @@
 (newline)
 (draw-board (solve-sudoku board1 3 3))
 (newline)
-(repeat-backtrack)
+; No alternates
+(backtrack)
 
 ;; Solve and display board2
 (draw-board board2)
 (newline)
 (draw-board (solve-sudoku board2 3 3))
 (newline)
-(repeat-backtrack)
+; No alternates
+(backtrack)
 
 ;; Solve and display board3
 (draw-board board3)
 (newline)
 (draw-board (solve-sudoku board3 3 2))
 (newline)
-(repeat-backtrack)
+; No alternates
+(backtrack)
 
 ;; Solve and display board4
 (draw-board board4)
 (newline)
 (draw-board (solve-sudoku board4 2 2))
 (newline)
-(repeat-backtrack)
+; This has many more than just the one more alternate shown
+(backtrack)
