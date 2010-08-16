@@ -19,10 +19,16 @@
 ;;;;;;;;;;;;;;;; General Functions ;;;;;;;;;;;;;;;;;;;;;
 ;; returns a list with items. min <= item < max
 (define (range min max)
-  (if (< min max)
-      (cons min (range (+ min 1) max))
-      '()
-      )
+  (letrec ((range-tr
+	    (lambda (mi ma accum)
+	      (if (< mi ma)
+		  (range-tr mi (- ma 1) (cons ma accum))
+		  accum
+		  )
+	      )
+	    ))
+    (range-tr (- min 1) (- max 1) '())
+    )
   )
 
 ;; removes all elements in subtracted from ls
@@ -32,14 +38,35 @@
 	  ls)
   )
 
+;; reverses a list
+(define (reverse-list list)
+  (letrec ((rev-tr
+	    (lambda (ls accum)
+	      (if (null? ls)
+		  accum
+		  (rev-tr (cdr ls) (cons (car ls) accum))
+		  )
+	      )
+	    ))
+    (rev-tr list '())
+    )
+  )
+
 ;; rotate a list of lists (ie matrix/board)
+;; guarentees that rows and cols will be switched
+;; and that rotate-matrix called twice on a matrix
+;; will result in the original matrix
 (define (rotate-matrix matrix)
-  (if (or (null? matrix) (null? (car matrix)))
-      '()
-      (cons (map car matrix)
-	    (rotate-matrix (map cdr matrix))
-	    )
-      )
+  (letrec ((matrix-tr
+	    (lambda (mat accum)
+	      (if (or (null? mat) (null? (car mat)))
+		  accum
+		  (matrix-tr (map cdr mat) (cons (map car mat) accum))
+		  )
+	      )
+	    ))
+    (reverse-list (matrix-tr matrix '()))
+    )
   )
 
 ;;checks to see if all items in a list are unique
@@ -56,11 +83,23 @@
   )
 
 ;; take the first len symbols off the front of ls and return it
+;(define (sublist-front ls len)
+;  (if (zero? len)
+;      '()
+;      (cons (car ls) (sublist-front (cdr ls) (- len 1)))
+;      )
+;  )
 (define (sublist-front ls len)
-  (if (zero? len)
-      '()
-      (cons (car ls) (sublist-front (cdr ls) (- len 1)))
-      )
+  (letrec ((sub-tr
+	    (lambda (l le accum)
+	      (if (zero? le)
+		  accum
+		  (sub-tr (cdr l) (- le 1) (cons (car l) accum))
+		  )
+	      )
+	    ))
+    (reverse-list (sub-tr ls len '()))
+    )
   )
 
 ;; take the last len symbols off the front of ls then return what is left
@@ -176,21 +215,19 @@
 		       )
 		     )
 		   )
-	   (rcol-helper (lambda (bigrow)
+	   (rcol-helper (lambda (bigrow accum)
 			  (if (null? bigrow)
-			      '()
-			      (append (rblock
-				       (sublist-front bigrow block-width)
-				       )
-				      (rcol-helper
-				       (sublist-back bigrow block-width)
-				       )
-				      )
+			      accum
+			      (rcol-helper (sublist-back bigrow block-width)
+					   (append accum
+						   (sublist-front bigrow block-width)
+						   )
+					   )
 			      )
 			  )
-		 )
+			)
 	   (rcol (lambda (bigrow)
-		   (rotate-matrix (rcol-helper (rotate-matrix bigrow)))))
+		   (rotate-matrix (rcol-helper (rotate-matrix bigrow) '()))))
 	   (rrow (lambda (board)
 		   (if (null? board)
 		       '()
