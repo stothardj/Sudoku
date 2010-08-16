@@ -83,12 +83,6 @@
   )
 
 ;; take the first len symbols off the front of ls and return it
-;(define (sublist-front ls len)
-;  (if (zero? len)
-;      '()
-;      (cons (car ls) (sublist-front (cdr ls) (- len 1)))
-;      )
-;  )
 (define (sublist-front ls len)
   (letrec ((sub-tr
 	    (lambda (l le accum)
